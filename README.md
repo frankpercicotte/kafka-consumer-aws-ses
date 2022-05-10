@@ -1,5 +1,5 @@
 
-#APP exemplo de uso do Kafka consumer para pegar uma mensagem e enviá-la via SES da aws para um email cadastrado.
+# APP exemplo de uso do Kafka consumer para pegar uma mensagem e enviá-la via SES da aws para um email cadastrado.
 
 ## Para este teste de aplicação deve-se configurar as variáveis de ambiente:
 - AWS_ACCESS_KEY, chave acesso da conta  aws.
