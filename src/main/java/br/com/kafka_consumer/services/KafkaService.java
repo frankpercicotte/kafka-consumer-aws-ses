@@ -12,26 +12,18 @@ import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.common.serialization.StringDeserializer;
 
 public class KafkaService {
-    public static void readMessage(String groupId) throws InterruptedException, ExecutionException {
+    public static String readMessage(String groupId) throws InterruptedException, ExecutionException {
         var consumer = new KafkaConsumer<String, String>(properties(groupId));
         consumer.subscribe(Collections.singletonList(System.getenv("KAFKA_TOPIC")));
-        boolean flagContinue = true;
 
-        while (flagContinue) {
-            var msgs = consumer.poll(Duration.ofMillis(500));
-            System.out.print("-");
-            for (ConsumerRecord<String, String> registro : msgs) {
-                System.out.println("Msg recebida: " + registro.value());
-                if(registro.value().equals("exit")){
-                    flagContinue = false;
-                }
-                if (AwsSeS.sendMessage(registro.value())) {
-                    System.out.println("Mensagem enviada com sucesso!");
-                } else {
-                    System.out.println("Ops problema ao enviar email!");
-                }
-            }
+        var msgs = consumer.poll(Duration.ofMillis(500));        
+        for (ConsumerRecord<String, String> registro : msgs) {
+            System.out.println("\nMensagem recebida: " + registro.value());
+            consumer.close();
+            return registro.value().toString();           
         }
+        consumer.close();
+        return null;        
     }
 
     private static Properties properties(String groupId) {
